@@ -1,0 +1,18 @@
+[package]
+name = "lowkit"
+version = "0.0.0"
+edition = "2024"
+license = "MIT"
+description = "lowkit"
+repository = "https://github.com/vilicvane/lowkit"
+
+[dependencies]
+tokio = { version = "1.49.0", features = ["process", "rt", "sync"] }
+
+[lints.clippy]
+collapsible_else_if = "allow"
+collapsible_if = "allow"
+disallowed_macros = "warn"
+module_inception = "allow"
+too_many_arguments = "allow"
+type_complexity = "allow"
