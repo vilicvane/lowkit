@@ -60,6 +60,20 @@ pub trait SelfWrapExt: Sized {
   fn wrap_err<T>(self) -> Result<T, Self> {
     Err(self)
   }
+
+  #[inline]
+  fn anyhow<T, TError>(self) -> anyhow::Result<T>
+  where
+    Self: Into<Result<T, TError>>,
+    TError: Into<anyhow::Error>,
+  {
+    self.into().map_err(|error| error.into())
+  }
+
+  #[inline]
+  fn anyhow_ok(self) -> anyhow::Result<Self> {
+    anyhow::Ok(self)
+  }
 }
 
 impl<T> SelfWrapExt for T {}
