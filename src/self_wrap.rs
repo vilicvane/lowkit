@@ -52,6 +52,11 @@ pub trait SelfWrapExt: Sized {
   }
 
   #[inline]
+  fn wrap_box(self) -> Box<Self> {
+    Box::new(self)
+  }
+
+  #[inline]
   fn wrap_ok<TError>(self) -> Result<Self, TError> {
     Ok(self)
   }

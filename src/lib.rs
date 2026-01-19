@@ -3,6 +3,7 @@ mod drop;
 mod errors;
 mod hex;
 mod self_wrap;
+mod serde;
 mod tokio;
 mod weak;
 
@@ -11,4 +12,5 @@ pub use drop::*;
 pub use errors::*;
 pub use hex::*;
 pub use self_wrap::*;
+pub use serde::*;
 pub use weak::*;

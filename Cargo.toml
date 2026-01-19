@@ -10,6 +10,9 @@ repository = "https://github.com/vilicvane/lowkit"
 anyhow = "1"
 base64 = "0.22"
 hex = "0.4"
+regex = "1"
+serde = { version = "1", features = ["derive"] }
+serde_regex = "1"
 thiserror = "2"
 tokio = { version = "1", features = ["process", "rt", "sync"] }
 
