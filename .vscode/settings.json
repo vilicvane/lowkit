@@ -1,3 +1,11 @@
 {
-  "cSpell.words": ["clippy", "lowkit", "serde", "signum", "thiserror"]
+  "cSpell.words": [
+    "chrono",
+    "clippy",
+    "itertools",
+    "lowkit",
+    "serde",
+    "signum",
+    "thiserror"
+  ]
 }
