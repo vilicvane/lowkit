@@ -4,7 +4,7 @@ mod errors;
 mod hex;
 mod self_wrap;
 mod serde;
-mod signum;
+mod sign;
 mod tokio;
 mod weak;
 
@@ -14,5 +14,5 @@ pub use errors::*;
 pub use hex::*;
 pub use self_wrap::*;
 pub use serde::*;
-pub use signum::*;
+pub use sign::*;
 pub use weak::*;
