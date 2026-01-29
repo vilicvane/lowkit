@@ -16,7 +16,7 @@ where
     .map(|namespace| namespace.as_ref().to_owned());
 
   let level = if cfg!(debug_assertions) {
-    "trace"
+    "debug"
   } else {
     "info"
   };
@@ -26,7 +26,7 @@ where
     .join(",");
 
   if filter.is_empty() {
-    filter = level.to_string();
+    filter = level.to_owned();
   }
 
   env_logger::Builder::from_env(env_logger::Env::default().default_filter_or(filter))
