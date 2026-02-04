@@ -1,4 +1,5 @@
 mod base64;
+mod boo;
 mod drop;
 mod errors;
 mod hex;
@@ -10,6 +11,7 @@ mod tokio;
 mod weak;
 
 pub use base64::*;
+pub use boo::*;
 pub use drop::*;
 pub use errors::*;
 pub use hex::*;
