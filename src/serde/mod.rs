@@ -1,9 +1,9 @@
-mod serde_bool;
-mod serde_regex;
-mod serde_socket_address;
-mod serde_true_as_default;
+mod bool;
+mod regex;
+mod socket_address;
+mod true_as_default;
 
-pub use serde_bool::*;
-pub use serde_regex::*;
-pub use serde_socket_address::*;
-pub use serde_true_as_default::*;
+pub use bool::*;
+pub use regex::*;
+pub use socket_address::*;
+pub use true_as_default::*;
