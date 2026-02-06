@@ -1,10 +1,8 @@
-use std::ops::Deref;
-
 use serde::{Deserialize, Deserializer, Serialize};
 
 use crate::SelfWrapExt;
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, derive_more::AsRef, derive_more::Deref)]
 #[serde(transparent)]
 pub struct SerdeTrueAsDefault<T>(T);
 
@@ -30,18 +28,4 @@ where
 enum TrueOrValue<T> {
   True(bool),
   Value(T),
-}
-
-impl<T> AsRef<T> for SerdeTrueAsDefault<T> {
-  fn as_ref(&self) -> &T {
-    &self.0
-  }
-}
-
-impl<T> Deref for SerdeTrueAsDefault<T> {
-  type Target = T;
-
-  fn deref(&self) -> &Self::Target {
-    &self.0
-  }
 }
