@@ -1,5 +1,6 @@
 mod base64;
 mod boo;
+mod debounced_count_logger;
 mod drop;
 mod errors;
 mod hex;
@@ -12,6 +13,7 @@ mod weak;
 
 pub use base64::*;
 pub use boo::*;
+pub use debounced_count_logger::*;
 pub use drop::*;
 pub use errors::*;
 pub use hex::*;
