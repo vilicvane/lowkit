@@ -9,6 +9,12 @@ use crate::SelfWrapExt;
 )]
 pub struct SerdeDuration(Duration);
 
+impl SerdeDuration {
+  pub fn into_inner(self) -> Duration {
+    self.0
+  }
+}
+
 impl Serialize for SerdeDuration {
   fn serialize<TSerializer>(
     &self,

@@ -6,6 +6,12 @@ use crate::SelfWrapExt;
 #[serde(transparent)]
 pub struct SerdeTrueAsDefault<T>(T);
 
+impl<T> SerdeTrueAsDefault<T> {
+  pub fn into_inner(self) -> T {
+    self.0
+  }
+}
+
 impl<'de, T> Deserialize<'de> for SerdeTrueAsDefault<T>
 where
   T: Deserialize<'de> + Default,

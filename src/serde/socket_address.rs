@@ -9,6 +9,12 @@ use crate::SelfWrapExt;
 )]
 pub struct SerdeSocketAddress(SocketAddr);
 
+impl SerdeSocketAddress {
+  pub fn into_inner(self) -> SocketAddr {
+    self.0
+  }
+}
+
 impl Serialize for SerdeSocketAddress {
   fn serialize<TSerializer>(
     &self,
