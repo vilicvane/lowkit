@@ -9,7 +9,7 @@
 /// # Example
 ///
 /// ```rust
-/// use lowkit::any_cast_ref;
+/// use lowkit::any_cast;
 ///
 /// trait Animal {
 ///   fn sound(&self) -> &'static str;
@@ -30,7 +30,7 @@
 /// }
 ///
 /// let cat = Cat;
-/// let animal = any_cast_ref!(&cat => dyn Animal; Dog, Cat).unwrap();
+/// let animal = any_cast!(&cat => dyn Animal; Dog, Cat).unwrap();
 ///
 /// assert_eq!(animal.sound(), "meow");
 /// ```
@@ -40,7 +40,7 @@
 /// The input expression must evaluate to a reference to a concrete `'static` type
 /// so it can be cast to `&dyn Any` internally.
 #[macro_export]
-macro_rules! any_cast_ref {
+macro_rules! any_cast {
   ($value:expr => $target_type:ty; $($source_type:ty),+ $(,)?) => {{
     'any_cast: {
       let value = $value as &dyn ::core::any::Any;
@@ -151,19 +151,19 @@ mod tests {
   struct Wallet;
 
   #[test]
-  fn any_cast_ref_matches_supported_type() {
+  fn any_cast_matches_supported_type() {
     let destination = ConcreteTypeA { kind: "type-a" };
 
-    let account = any_cast_ref!(&destination => dyn TargetTrait; ConcreteTypeB, ConcreteTypeA).unwrap();
+    let account = any_cast!(&destination => dyn TargetTrait; ConcreteTypeB, ConcreteTypeA).unwrap();
 
     assert_eq!(account.kind(), "type-a");
   }
 
   #[test]
-  fn any_cast_ref_returns_none_when_no_type_matches() {
+  fn any_cast_returns_none_when_no_type_matches() {
     let destination = Wallet;
 
-    let account = any_cast_ref!(&destination => dyn TargetTrait; ConcreteTypeA, ConcreteTypeB);
+    let account = any_cast!(&destination => dyn TargetTrait; ConcreteTypeA, ConcreteTypeB);
 
     assert!(account.is_none());
   }
