@@ -33,8 +33,7 @@
 /// let cat = Cat;
 ///
 /// let sound = any_cast_match!(&cat;
-///   Dog => |dog| dog.sound(),
-///   Cat => |cat| cat.sound(),
+///   Dog | Cat => |animal| animal.sound(),
 /// );
 ///
 /// assert_eq!(sound, Some("meow"));
@@ -49,10 +48,59 @@ macro_rules! any_cast_match {
   (@collect $value:ident; [$($arms:tt)*] _ => $fallback:expr $(,)?) => {
     $crate::any_cast_match!(@emit_fallback $value; [$($arms)*] $fallback)
   };
+  (@collect $value:ident; [$($arms:tt)*] $first_source_type:ty $(| $rest_source_type:ty)+ => |$binding:ident| $body:expr, $($rest:tt)+) => {
+    $crate::any_cast_match!(
+      @collect_group
+      $value;
+      [$($arms)*]
+      [$binding]
+      [$body]
+      [$($rest)+]
+      $first_source_type $(| $rest_source_type)+
+    )
+  };
+  (@collect $value:ident; [$($arms:tt)*] $first_source_type:ty $(| $rest_source_type:ty)+ => |$binding:ident| $body:expr $(,)?) => {
+    $crate::any_cast_match!(
+      @collect_group_terminal
+      $value;
+      [$($arms)*]
+      [$binding]
+      [$body]
+      $first_source_type $(| $rest_source_type)+
+    )
+  };
   (@collect $value:ident; [$($arms:tt)*] $source_type:ty => |$binding:ident| $body:expr, $($rest:tt)+) => {
     $crate::any_cast_match!(@collect $value; [$($arms)* [$source_type][$binding][$body]] $($rest)+)
   };
   (@collect $value:ident; [$($arms:tt)*] $source_type:ty => |$binding:ident| $body:expr $(,)?) => {
+    $crate::any_cast_match!(@emit_option $value; [$($arms)* [$source_type][$binding][$body]])
+  };
+
+  (@collect_group $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] [$($rest:tt)+] $source_type:ty | $($rest_source_type:ty)|+) => {
+    $crate::any_cast_match!(
+      @collect_group
+      $value;
+      [$($arms)* [$source_type][$binding][$body]]
+      [$binding]
+      [$body]
+      [$($rest)+]
+      $($rest_source_type)|+
+    )
+  };
+  (@collect_group $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] [$($rest:tt)+] $source_type:ty) => {
+    $crate::any_cast_match!(@collect $value; [$($arms)* [$source_type][$binding][$body]] $($rest)+)
+  };
+  (@collect_group_terminal $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] $source_type:ty | $($rest_source_type:ty)|+) => {
+    $crate::any_cast_match!(
+      @collect_group_terminal
+      $value;
+      [$($arms)* [$source_type][$binding][$body]]
+      [$binding]
+      [$body]
+      $($rest_source_type)|+
+    )
+  };
+  (@collect_group_terminal $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] $source_type:ty) => {
     $crate::any_cast_match!(@emit_option $value; [$($arms)* [$source_type][$binding][$body]])
   };
 
@@ -112,8 +160,7 @@ macro_rules! any_cast_match {
 /// let mut dog = Dog { name: "spot" };
 ///
 /// any_cast_match_mut!(&mut dog;
-///   Cat => |cat| cat.name = "kitty",
-///   Dog => |dog| dog.name = "buddy",
+///   Cat | Dog => |animal| animal.name = "buddy",
 /// )
 /// .unwrap();
 ///
@@ -129,10 +176,59 @@ macro_rules! any_cast_match_mut {
   (@collect $value:ident; [$($arms:tt)*] _ => $fallback:expr $(,)?) => {
     $crate::any_cast_match_mut!(@emit_fallback $value; [$($arms)*] $fallback)
   };
+  (@collect $value:ident; [$($arms:tt)*] $first_source_type:ty $(| $rest_source_type:ty)+ => |$binding:ident| $body:expr, $($rest:tt)+) => {
+    $crate::any_cast_match_mut!(
+      @collect_group
+      $value;
+      [$($arms)*]
+      [$binding]
+      [$body]
+      [$($rest)+]
+      $first_source_type $(| $rest_source_type)+
+    )
+  };
+  (@collect $value:ident; [$($arms:tt)*] $first_source_type:ty $(| $rest_source_type:ty)+ => |$binding:ident| $body:expr $(,)?) => {
+    $crate::any_cast_match_mut!(
+      @collect_group_terminal
+      $value;
+      [$($arms)*]
+      [$binding]
+      [$body]
+      $first_source_type $(| $rest_source_type)+
+    )
+  };
   (@collect $value:ident; [$($arms:tt)*] $source_type:ty => |$binding:ident| $body:expr, $($rest:tt)+) => {
     $crate::any_cast_match_mut!(@collect $value; [$($arms)* [$source_type][$binding][$body]] $($rest)+)
   };
   (@collect $value:ident; [$($arms:tt)*] $source_type:ty => |$binding:ident| $body:expr $(,)?) => {
+    $crate::any_cast_match_mut!(@emit_option $value; [$($arms)* [$source_type][$binding][$body]])
+  };
+
+  (@collect_group $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] [$($rest:tt)+] $source_type:ty | $($rest_source_type:ty)|+) => {
+    $crate::any_cast_match_mut!(
+      @collect_group
+      $value;
+      [$($arms)* [$source_type][$binding][$body]]
+      [$binding]
+      [$body]
+      [$($rest)+]
+      $($rest_source_type)|+
+    )
+  };
+  (@collect_group $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] [$($rest:tt)+] $source_type:ty) => {
+    $crate::any_cast_match_mut!(@collect $value; [$($arms)* [$source_type][$binding][$body]] $($rest)+)
+  };
+  (@collect_group_terminal $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] $source_type:ty | $($rest_source_type:ty)|+) => {
+    $crate::any_cast_match_mut!(
+      @collect_group_terminal
+      $value;
+      [$($arms)* [$source_type][$binding][$body]]
+      [$binding]
+      [$body]
+      $($rest_source_type)|+
+    )
+  };
+  (@collect_group_terminal $value:ident; [$($arms:tt)*] [$binding:ident] [$body:expr] $source_type:ty) => {
     $crate::any_cast_match_mut!(@emit_option $value; [$($arms)* [$source_type][$binding][$body]])
   };
 
@@ -183,8 +279,7 @@ mod tests {
     let cat = Cat { name: "mittens" };
 
     let name = any_cast_match!(&cat;
-      Dog => |dog| dog.name,
-      Cat => |cat| cat.name,
+      Dog | Cat => |animal| animal.name,
     );
 
     assert_eq!(name, Some("mittens"));
@@ -220,11 +315,37 @@ mod tests {
     let mut dog = Dog { name: "spot" };
 
     any_cast_match_mut!(&mut dog;
-      Cat => |cat| cat.name = "kitty",
-      Dog => |dog| dog.name = "buddy",
+      Cat | Dog => |animal| animal.name = "buddy",
     )
     .unwrap();
 
+    assert_eq!(dog.name, "buddy");
+  }
+
+  #[test]
+  fn any_cast_match_grouped_types_use_repeated_body() {
+    let dog = Dog { name: "buddy" };
+
+    let name = any_cast_match!(&dog;
+      Cat | Dog => |animal| animal.name,
+    );
+
+    assert_eq!(name, Some("buddy"));
+  }
+
+  #[test]
+  fn any_cast_match_mut_grouped_types_use_repeated_body_with_fallback() {
+    let mut dog = Dog { name: "spot" };
+
+    let name = any_cast_match_mut!(&mut dog;
+      Cat | Dog => |animal| {
+        animal.name = "buddy";
+        animal.name
+      },
+      _ => "unknown",
+    );
+
+    assert_eq!(name, "buddy");
     assert_eq!(dog.name, "buddy");
   }
 
