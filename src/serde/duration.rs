@@ -5,7 +5,15 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use crate::SelfWrapExt;
 
 #[derive(
-  Debug, Clone, Copy, derive_more::AsRef, derive_more::Deref, derive_more::From, derive_more::Into,
+  Debug,
+  Clone,
+  Copy,
+  PartialEq,
+  Eq,
+  derive_more::AsRef,
+  derive_more::Deref,
+  derive_more::From,
+  derive_more::Into,
 )]
 pub struct SerdeDuration(Duration);
 
