@@ -19,10 +19,14 @@ impl GraceLease {
   }
 
   pub async fn acquire(&self) -> GraceLeasePermit {
-    let timeout = self.timeout;
+    self.acquire_with_grace_period(self.timeout).await
+  }
+
+  /// Acquires from the same pool, using a per-permit cooldown after it is dropped.
+  pub async fn acquire_with_grace_period(&self, grace_period: Duration) -> GraceLeasePermit {
     let permit = self.semaphore.clone().acquire_owned().await.unwrap();
 
-    GraceLeasePermit::new(permit, timeout)
+    GraceLeasePermit::new(permit, grace_period)
   }
 }
 
